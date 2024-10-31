@@ -251,3 +251,35 @@ module.exports.answerVoiceWithGPT = async (ctx, directive) => {
 	const reply = await getGPTAnswerWithContext(ctx.from.id, transcription, directive)
 	return reply
 }
+
+function extractJsonAndRemainingString(str) {
+  // Проверяем, что аргумент является строкой
+  if (typeof str !== 'string') {
+    throw new Error('Invalid input: str must be a string');
+  }
+
+  // Ищем начало и конец JSON-объекта в строке
+  const startIndex = str.indexOf('{');
+  const endIndex = str.lastIndexOf('}') + 1;
+
+  // Если JSON-объект не найден, возвращаем null и всю строку
+  if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+    return { jsonObject: null, remainingString: str };
+  }
+
+  // Извлекаем JSON-объект из строки
+  const jsonString = str.substring(startIndex, endIndex);
+
+  // Парсим JSON-объект
+  try {
+    const jsonObject = JSON.parse(jsonString);
+
+    // Извлекаем оставшуюся часть строки
+    const remainingString = str.substring(endIndex).trim();
+
+    return { json: jsonObject, string: remainingString };
+  } catch (error) {
+    console.log('Error parsing JSON:');
+    return { jsonObject: null, remainingString: str };
+  }
+}

@@ -131,7 +131,7 @@ const changeVocabBoosterPrompt = async (conversation, ctx) => {
 		return;
 	} else {
 		setMemorySize(parseInt(message));
-		ctx.reply(`Теперь бот запоминает <u>${getMemorySize()}</u> сообщений` , {
+		ctx.reply(`Теперь бот запоминает ${getMemorySize()} сообщений` , {
 			reply_markup: toAdminMenuKeyboard,
 		});
 		try {
